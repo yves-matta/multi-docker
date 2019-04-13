@@ -21,7 +21,7 @@ after_success:
   - docker push yvesmatta/multi-server
   - docker push yvesmatta/multi-worker
 
-delpoy:
+deploy:
   provider: elasticbeanstalk
   region: 'us-east-1'
   app: 'multi-docker'
