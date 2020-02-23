@@ -15,11 +15,13 @@ class Fib extends Component {
 
   async fetchValues() {
     const values = await axios.get('/api/values/current');
+    console.log('Fib fetchValues values', values);
     this.setState({ values: values.data || {} });
   }
 
   async fetchIndexes() {
     const seenIndexes = await axios.get('/api/values/all');
+    console.log('Fib fetchIndexes seenIndexes', seenIndexes);
     this.setState({ seenIndexes: seenIndexes.data || [] });
   }
 
@@ -42,6 +44,8 @@ class Fib extends Component {
 
   renderSeenIndexes() {
     const { seenIndexes } = this.state;
+    console.log('Fib renderSeenIndexes this.state', Object.freeze(this.state));
+    console.log('Fib renderSeenIndexes seenIndexes', seenIndexes);
 
     return seenIndexes.map(({ number }) => number).join(', ');
   }
