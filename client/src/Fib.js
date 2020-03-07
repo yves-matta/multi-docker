@@ -1,6 +1,12 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 
+function validateResponse({response}) {
+  const { headers } = response || {}
+
+  return headers['content-type'].includes('application/json')
+}
+
 class Fib extends Component {
   state = {
     index: '',
@@ -14,15 +20,19 @@ class Fib extends Component {
   }
 
   async fetchValues() {
-    const values = await axios.get('/api/values/current');
-    console.log('Fib fetchValues values', values);
-    this.setState({ values: values.data || {} });
+    const response = await axios.get('/api/values/current') || {};
+    const isValidateResponse = validateResponse({ response })
+    console.log('Fib fetchValues isValidateResponse', isValidateResponse);
+    console.log('Fib fetchValues response', response);
+    this.setState({ values: isValidateResponse ? response.data : {} });
   }
 
   async fetchIndexes() {
-    const seenIndexes = await axios.get('/api/values/all');
-    console.log('Fib fetchIndexes seenIndexes', seenIndexes);
-    this.setState({ seenIndexes: seenIndexes.data || [] });
+    const response = await axios.get('/api/values/all') || {};
+    const isValidateResponse = validateResponse({ response })
+    console.log('Fib fetchIndexes isValidateResponse', isValidateResponse);
+    console.log('Fib fetchIndexes response', response);
+    this.setState({ seenIndexes: isValidateResponse ? response.data : [] });
   }
 
   handleChangeIndex = event => {
@@ -46,8 +56,11 @@ class Fib extends Component {
     const { seenIndexes } = this.state;
     console.log('Fib renderSeenIndexes this.state', Object.freeze(this.state));
     console.log('Fib renderSeenIndexes seenIndexes', seenIndexes);
+    if (Array.isArray(seenIndexes)) {
+      return seenIndexes.map(({ number }) => number).join(', ');
+    }
 
-    return seenIndexes.map(({ number }) => number).join(', ');
+    return null
   }
 
   renderValues() {
